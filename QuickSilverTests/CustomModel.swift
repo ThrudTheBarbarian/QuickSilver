@@ -72,7 +72,6 @@ final class CustomModel: XCTestCase
 		|* Create our dummy job
 		\*********************************************************************/
 		let entity 	= JobEntity.init(withTableName: "jobs", inEngine: self.engine)
-		let modelId	= entity.nextModelId()
 		let job  	= JobModel.init(withEntity:entity,
 										 title:"managing director",
 									 minSalary: 100000,
@@ -104,7 +103,6 @@ final class CustomModel: XCTestCase
 		|* Create our dummy job
 		\*********************************************************************/
 		let entity 	= JobEntity.init(withTableName: "jobs", inEngine: self.engine)
-		let modelId	= entity.nextModelId()
 		let job  	= JobModel.init(withEntity:entity,
 										 title:"managing director",
 									 minSalary: 100000,

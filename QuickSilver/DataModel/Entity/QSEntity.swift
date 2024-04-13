@@ -41,7 +41,6 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model handling
 	\*************************************************************************/
-	private var nextModelIdValue : Int64				// Table's next model-id
 	private var allModelsLoaded: Bool					// Models all loaded
 	private var persistSql: QSPreparedSql!				// SQL to persist model
 	private var modelIdLock: NSLock						// Lock, protect nextId
@@ -63,7 +62,6 @@ class QSEntity : NSObject
 		
 		// Table management
 		self.tableName			= tableName
-		self.nextModelIdValue	= 0
 		self.modelIdLock		= NSLock()
 		
 		// Create storage for the column metadata
@@ -116,42 +114,6 @@ class QSEntity : NSObject
 		let col = self.column(forName: name)
 		return col?.type ?? QSColumnType.Varchar
 		}
-
-	/*************************************************************************\
-	|* Schema management : return the next model-id
-	\*************************************************************************/
-	func nextModelId() -> Int64
-		{
-		if let ce = self.engine.counterEntity
-			{
-			modelIdLock.lock()
-			defer
-				{
-				modelIdLock.unlock()
-				}
-				
-			/*****************************************************************\
-			|* If we have 0 as our next-model-id, ask the counter-entity to
-			|* give us a new value. 0 is never a valid next-model-id
-			\*****************************************************************/
-			if self.nextModelIdValue == 0
-				{
-				self.nextModelIdValue = ce.nextModelId(for:self.tableName)
-				}
-						
-			/*****************************************************************\
-			|* Increment the next-model-id and return its current value.
-			\*****************************************************************/
-			self.nextModelIdValue += 1
-			ce.setNextModelId(to:self.nextModelIdValue, for:self.tableName)
-			}
-		else
-			{
-			Logger.quicksilver.log("Cannot obtain QSEngine counter entity")
-			}
-	return self.nextModelIdValue
-	}
-
 
 	/*************************************************************************\
 	|* Schema management : Hang around waiting for any outstanding writes
