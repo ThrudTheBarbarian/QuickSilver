@@ -14,7 +14,7 @@ import Foundation
 import OSLog
 import SQLite3
 
-class QSIO : NSObject
+public class QSIO : NSObject
 	{
 	/*************************************************************************\
 	|* How much to enforce the D in ACID

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum QSException: Error {
+public enum QSException: Error {
     case noDatabase,
 		 unknownSQLObject
 		 

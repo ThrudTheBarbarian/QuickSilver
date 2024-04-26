@@ -19,7 +19,7 @@ import Foundation
 |*   let combined = QSColumnOptions.none | QSColumnOptions.lazyLoad
 |*
 \*****************************************************************************/
-enum QSColumnOptions : Int
+public enum QSColumnOptions : Int
 	{
 	case none			= 0x000,
 		 createIndex	= 0x001,
@@ -30,7 +30,7 @@ enum QSColumnOptions : Int
 |* Define the types of columns we support. This is used to determine what sort
 |* of object or value to pass back and expect from methods handling the type
 \*****************************************************************************/
-enum QSColumnType
+public enum QSColumnType
 	{
 	case
 		IntegerPK,
@@ -52,7 +52,7 @@ enum QSColumnType
 				// catch something unknown
 	}
 
-class QSColumn : NSObject
+public class QSColumn : NSObject
 	{
 	var name 	: String!
 	var type 	: QSColumnType

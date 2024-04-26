@@ -15,7 +15,7 @@ import OSLog
 /*****************************************************************************\
 |* Class definition
 \*****************************************************************************/
-class QSCounterEntity : QSEntity
+public class QSCounterEntity : QSEntity
 	{
 	var counters : [String : QSCounterModel]		// list of counters
 	var nextId : Int64								// next counter-id
@@ -129,7 +129,7 @@ class QSCounterEntity : QSEntity
 	|* Get the model information from a result set, and construct the class-
 	|* specific model
 	\*************************************************************************/
-	override func loadModelFrom(resultSet rs:QSResultSet) -> QSModel!
+	override public func loadModelFrom(resultSet rs:QSResultSet) -> QSModel!
 		{
 		var model:QSCounterModel! = nil
 		if let uuid = rs.stringForColumn(named: QSModel.uuidColumn)
@@ -174,7 +174,7 @@ class QSCounterEntity : QSEntity
 	/*************************************************************************\
 	|* Persist one of our models
 	\*************************************************************************/
-	override func persist(model: QSModel)
+	override public func persist(model: QSModel)
 		{
 		if model is QSCounterModel
 			{

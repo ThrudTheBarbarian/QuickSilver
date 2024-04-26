@@ -14,7 +14,7 @@ import OSLog
 /*****************************************************************************\
 |* Class definition
 \*****************************************************************************/
-class QSSqlOperation : Operation
+public class QSSqlOperation : Operation
 	{
 	let io : QSIO!				// io object
 	let sql : Any!				// Either a string or preparedSQL
@@ -125,7 +125,7 @@ class QSSqlOperation : Operation
 	/*************************************************************************\
 	|* Operation entry point
 	\*************************************************************************/
-	func run()
+	public func run()
 		{
 		self.main()
 		}

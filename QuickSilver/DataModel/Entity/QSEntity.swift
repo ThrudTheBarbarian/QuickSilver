@@ -22,21 +22,21 @@ import OSLog
 /*****************************************************************************\
 |* Class definition
 \*****************************************************************************/
-class QSEntity : NSObject
+open class QSEntity : NSObject
 	{
 	/*************************************************************************\
 	|* Interaction
 	\*************************************************************************/
-	let engine: QSEngine								// Engine for the db
-	var isActive: Bool									// Are we active
+	public let engine: QSEngine							// Engine for the db
+	public var isActive: Bool							// Are we active
 	
 	/*************************************************************************\
 	|* Entity definition
 	\*************************************************************************/
-	var tableName: String								// Name of table in DB
-	var columnNames: [String]							// Entity Column names
-	var columnTypes: [QSColumn]							// Types of each column
-	var columnTypesByName: [String : QSColumn]			// Column objects by name
+	public var tableName: String						// Name of table in DB
+	public var columnNames: [String]					// Entity Column names
+	public var columnTypes: [QSColumn]					// Types of each column
+	public var columnTypesByName: [String : QSColumn]	// Column objects by name
 
 	/*************************************************************************\
 	|* Model handling
@@ -85,6 +85,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Schema management : Add a column
 	\*************************************************************************/
+	public
 	func addColumn(name:String,
 				   type:QSColumnType,
 				options:QSColumnOptions = QSColumnOptions.none)
@@ -101,6 +102,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Schema management : return a column by name
 	\*************************************************************************/
+	public
 	func column(forName name:String) -> QSColumn!
 		{
 		return self.columnTypesByName[name]
@@ -109,6 +111,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Schema management : return a column-type by name
 	\*************************************************************************/
+	public
 	func columnType(forName name:String) -> QSColumnType
 		{
 		let col = self.column(forName: name)
@@ -118,6 +121,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Schema management : Hang around waiting for any outstanding writes
 	\*************************************************************************/
+	public
 	func waitForOutstandingWrites()
 		{
 		self.engine.io.bgWriteQueue.waitForOutstandingOperations()
@@ -137,6 +141,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Utility functions: return the correct object for a given column type
 	\*************************************************************************/
+	public
 	static func objectFrom(resultSet rs:QSResultSet,
 						  withType type:QSColumnType,
 					 forColumnIndex idx:Int) -> AnyObject!
@@ -205,6 +210,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Low-level : Generate a preparedSql object for a select operation
 	\*************************************************************************/
+	public
 	func sqlForSelect(of cols:String, where condition:String) -> QSPreparedSql
 		{
 		let sql = condition.isEmpty
@@ -220,6 +226,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Low-level : Generate a preparedSql object for a select operation
 	\*************************************************************************/
+	public
 	func sqlForSelect(where condition:String = "") -> QSPreparedSql
 		{
 		return self.sqlForSelect(of:"*", where:condition)
@@ -228,6 +235,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Low-level : Generate a preparedSql object for a DISTINCT select op
 	\*************************************************************************/
+	public
 	func sqlForSelect(distinct cols:String, where condition:String) -> QSPreparedSql
 		{
 		let sql = condition.isEmpty
@@ -243,6 +251,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Low-level : Generate a preparedSql object for a delete operation
 	\*************************************************************************/
+	public
 	func sqlForDelete(where condition:String = "") -> QSPreparedSql
 		{
 		let sql = condition.isEmpty
@@ -258,6 +267,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Low-level : Generate a preparedSql object for a modify operation
 	\*************************************************************************/
+	public
 	func sqlForModify(of col:String, where condition:String) -> QSPreparedSql
 		{
 		let sql = condition.isEmpty
@@ -279,6 +289,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Low-level : Generate a preparedSql object for a modify by dbid
 	\*************************************************************************/
+	public
 	func sqlForModifyByUuid(of col:String) -> QSPreparedSql
 		{
 		return self.sqlForModify(of:col, where:QSModel.uuidEquals)
@@ -287,6 +298,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Low-level : Generate a preparedSql object for an update operation
 	\*************************************************************************/
+	public
 	func sqlForUpdate(of col:String, where condition:String) -> QSPreparedSql
 		{
 		let sql = condition.isEmpty
@@ -300,6 +312,7 @@ class QSEntity : NSObject
 									  prepare: false)
 		}
 	
+	public
 	func sqlForUpdateByUuid(of cols:String) -> QSPreparedSql
 		{
 		return self.sqlForUpdate(of: cols, where: QSModel.uuidEquals)
@@ -352,6 +365,7 @@ class QSEntity : NSObject
 	|* Low-level : Create a table if one doesn't already exist, using the
 	|* column types registered with the entity
 	\*************************************************************************/
+	public
 	func createTableIfNotExists() -> Bool
 		{
 		let prefix = "CREATE TABLE IF NOT EXISTS \(self.tableName)\n\t(\n"
@@ -415,6 +429,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : return the model for a UUID in this entities table
 	\*************************************************************************/
+	public
 	func modelWith(uuid:String) -> QSModel!
 		{
 		if let model = self.cachedModelWith(uuid: uuid)
@@ -455,6 +470,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : return the models for UUIDs in this entities table
 	\*************************************************************************/
+	public
 	func modelsWith(uuids:[String]) -> Set<QSModel>
 		{
 		var models = Set<QSModel>()
@@ -494,6 +510,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : return models based on a WHERE clause
 	\*************************************************************************/
+	public
 	func models(where sql:String!, args:[Any?]) -> Set<QSModel>!
 		{
 		var result:Set<QSModel>!	= nil
@@ -531,6 +548,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : return models based on a WHERE clause, varargs style
 	\*************************************************************************/
+	public
 	func models(where sql:String!, _ args:Any?...) -> Set<QSModel>!
 		{
 		return self.models(where:sql, args:args)
@@ -540,6 +558,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : return any model based on a WHERE clause
 	\*************************************************************************/
+	public
 	func anyModel(where sql:String!, args:[Any?]) -> QSModel!
 		{
 		var result:Set<QSModel>!	= nil
@@ -577,6 +596,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : return entities based on a WHERE clause, varargs style
 	\*************************************************************************/
+	public
 	func anyModel(where sql:String!, _ args:Any?...) -> QSModel!
 		{
 		return self.anyModel(where:sql, args:args)
@@ -585,6 +605,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : get the UUIDs for a WHERE clause
 	\*************************************************************************/
+	public
 	func modelUuids(where sql:String!, args:[Any?]) -> Set<String>
 		{
 		var result:Set<String> = Set<String>()
@@ -617,6 +638,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : get the UUIDs for a WHERE clause, varargs style
 	\*************************************************************************/
+	public
 	func modelUuids(where sql:String!, _ args:Any?...) -> Set<String>
 		{
 		return self.modelUuids(where:sql, args:args)
@@ -625,6 +647,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : get the modelIds for a WHERE clause
 	\*************************************************************************/
+	public
 	func uuids(where sql:String!, args:[Any?]) -> Set<String>
 		{
 		var result:Set<String> 		= Set<String>()
@@ -654,6 +677,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : get the modelIds for a WHERE clause, varargs style
 	\*************************************************************************/
+	public
 	func modelIds(where sql:String!, _ args:Any?...) -> Set<String>
 		{
 		return self.uuids(where:sql, args:args)
@@ -662,6 +686,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : count of models with a WHERE clause
 	\*************************************************************************/
+	public
 	func countOfModels(where sql:String!, args:[Any?]) -> Int64
 		{
 		var result:Int64 = 0
@@ -688,6 +713,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : count of models with a WHERE clause, varargs style
 	\*************************************************************************/
+	public
 	func countOfModels(where sql:String!, _ args:Any?...) -> Int64
 		{
 		return self.countOfModels(where:sql, args:args)
@@ -697,6 +723,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : check if model exists with a WHERE clause
 	\*************************************************************************/
+	public
 	func modelExists(where sql:String, args:[Any?]) -> Bool
 		{
 		var exists 		= false
@@ -724,6 +751,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : check if model exists with a WHERE clause, varargs
 	\*************************************************************************/
+	public
 	func modelExists(where sql:String, _ args:Any?...) -> Bool
 		{
 		return self.modelExists(where: sql, args: args)
@@ -758,6 +786,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model retrieval : get DISTINCT results using WHERE clause, varargs
 	\*************************************************************************/
+	public
 	func select(distinct colName:String, where sql:String, _ args:Any?...) -> [AnyObject]
 		{
 		return self.select(distinct:colName, where:sql, args:args)
@@ -768,6 +797,15 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model persistence : column update
 	\*************************************************************************/
+	public func addOperation(_ op:Operation)
+		{
+		self.engine.io.bgWriteQueue.addOperation(op)
+		}
+		
+	/*************************************************************************\
+	|* Model persistence : column update
+	\*************************************************************************/
+	public
 	func update(column:String, to value:AnyObject!, where sql:String!, args:[Any?])
 		{
 		let psql 		= self.sqlForUpdate(of:column, where:sql)
@@ -787,6 +825,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model persistence : column update, varargs version
 	\*************************************************************************/
+	public
 	func update(column:String, to value:AnyObject!, where sql:String!, _ args:Any?...)
 		{
 		return self.update(column:column, to:value, where:sql, args:args)
@@ -795,6 +834,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model persistence : Create the SQL to use
 	\*************************************************************************/
+	public
 	func persistModelSql() -> QSPreparedSql
 		{
 		if let persistSql = self.persistSql
@@ -819,6 +859,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model persistence : Save the model to the DB. Entities need to override
 	\*************************************************************************/
+	open
 	func persist(model:QSModel)
 		{
 		Logger.quicksilver.error("Class \(String(describing: self)) has not implemented persist(model:)")
@@ -827,6 +868,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model persistence : Update the model to the DB. Entities need to override
 	\*************************************************************************/
+	open
 	func update(model:QSModel)
 		{
 		Logger.quicksilver.error("Class \(String(describing: self)) has not implemented update(model:)")
@@ -835,6 +877,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model persistence : Update the model using prepared SQL or string
 	\*************************************************************************/
+	public
 	func executeUpdate(sql:Any, withArgs args:[Any?])
 		{
 		if (sql is String) || (sql is QSPreparedSql)
@@ -854,6 +897,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model persistence : Update the model, varargs version
 	\*************************************************************************/
+	public
 	func executeUpdate(_ sql:Any, _ args:AnyObject?...)
 		{
 		if (sql is String)
@@ -877,9 +921,11 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model persistence : Override to implement behaviour in subclass
 	\*************************************************************************/
+	open
 	func willSaveEngine()
 		{}
 	
+	open
 	func didSaveEngine()
 		{}
 		
@@ -889,12 +935,14 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Delete : subclasses can override this to implement behaviour
 	\*************************************************************************/
+	open
 	func willDelete(model:QSModel)
 		{}
 	
 	/*************************************************************************\
 	|* Delete : set the deleted flag and remove the model from the cache
 	\*************************************************************************/
+	public
 	func deleteOfModelWith(uuid:String)
 		{
 		if let model = self.cachedModelWith(uuid:uuid)
@@ -907,6 +955,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Delete : Delete a set of models
 	\*************************************************************************/
+	public
 	func deleteOfModelsWith(uuids:any Collection)
 		{
 		for uuid in uuids
@@ -921,6 +970,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Delete : Get rid of a model
 	\*************************************************************************/
+	public
 	func delete(model:QSModel)
 		{
 		/*********************************************************************\
@@ -939,6 +989,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Delete : Get rid of a collection of models
 	\*************************************************************************/
+	public
 	func delete(models:any Collection)
 		{
 		if (models.count > 0)
@@ -960,6 +1011,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Delete : Get rid of an array of modelIds
 	\*************************************************************************/
+	public
 	func delete(uuids:[String])
 		{
 		if (uuids.count > 0)
@@ -975,6 +1027,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Delete : Get rid of models using a WHERE clause
 	\*************************************************************************/
+	public
 	func deleteModels(where sql:String, args:[Any?]) -> Bool
 		{
 		var deletedModels = false
@@ -1011,6 +1064,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Delete : Get rid of models using a WHERE clause, varargs version
 	\*************************************************************************/
+	public
 	func deleteModels(where sql:String, _ args:Any?...) -> Bool
 		{
 		return self.deleteModels(where:sql, args:args)
@@ -1022,6 +1076,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model creation : subclasses must override this to implement behaviour
 	\*************************************************************************/
+	open
 	func loadModelFrom(resultSet results:QSResultSet) -> QSModel!
 		{
 		Logger.quicksilver.error("loadModelFrom(resultSet:) missing in \(self.className)")
@@ -1031,6 +1086,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model creation : Create models from a result-set
 	\*************************************************************************/
+	public
 	func loadModelsFrom(resultSet results:QSResultSet, limit:Int = 0) -> Set<QSModel>
 		{
 		var models = Set<QSModel>()
@@ -1064,6 +1120,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model creation : Create models from a result-set of dbids
 	\*************************************************************************/
+	public
 	func loadModelsFrom(resultSetOfUuids rs:QSResultSet, limit:Int = 0) -> [QSModel]
 		{
 		var models 		= [QSModel]()
@@ -1103,12 +1160,14 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model creation : override the call to add functionality on db open
 	\*************************************************************************/
+	open
 	func didOpenDatabase()
 		{}
 	
 	/*************************************************************************\
 	|* Model creation : override the call to add functionality on model create
 	\*************************************************************************/
+	open
 	func didCreate(model:QSModel)
 		{}
 	
@@ -1117,6 +1176,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Data access : Get a string for a model's column
 	\*************************************************************************/
+	public
 	func stringFor(column name:String, forUuid uuid:String) -> String!
 		{
 		let sql = self.sqlForSelect(of: name, where: QSModel.uuidEquals)
@@ -1128,6 +1188,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Data access : Get a number for a model's column
 	\*************************************************************************/
+	public
 	func numberFor(column name:String, forUuid uuid:String) -> NSNumber!
 		{
 		let sql = self.sqlForSelect(of: name, where: QSModel.uuidEquals)
@@ -1139,6 +1200,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Data access : Get a date for a model's column
 	\*************************************************************************/
+	public
 	func dateFor(column name:String, forUuid uuid:String) -> Date!
 		{
 		let sql = self.sqlForSelect(of: name, where: QSModel.uuidEquals)
@@ -1150,6 +1212,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Data access : Get a blob for a model's column
 	\*************************************************************************/
+	public
 	func dataFor(column name:String, forUuid uuid:String) -> Data!
 		{
 		let sql = self.sqlForSelect(of: name, where: QSModel.uuidEquals)
@@ -1161,6 +1224,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Data access : Get a bool for a model's column
 	\*************************************************************************/
+	public
 	func boolFor(column name:String, forUuid uuid:String) -> Bool!
 		{
 		let sql = self.sqlForSelect(of: name, where: QSModel.uuidEquals)
@@ -1172,6 +1236,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Data access : Get an int64 for a model's column
 	\*************************************************************************/
+	public
 	func int64For(column name:String, forUuid uuid:String) -> Int64!
 		{
 		let sql = self.sqlForSelect(of: name, where: QSModel.uuidEquals)
@@ -1183,6 +1248,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Data access : Persist a column's value for a model, optionally with date
 	\*************************************************************************/
+	public
 	func write(value:AnyObject,
 		 toColumn name:String,
 		 forUuid uuid:String,
@@ -1213,6 +1279,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model cache : cache a model
 	\*************************************************************************/
+	public
 	func cacheModel(_ model:QSModel)
 		{
 		if model.uuid.isEmpty
@@ -1234,6 +1301,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model cache : return the model via its uuid
 	\*************************************************************************/
+	public
 	func cachedModelWith(uuid:String) -> QSModel!
 		{
 		if let model = self.modelsByUuid[uuid] as? QSModel
@@ -1247,6 +1315,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model cache : return a set of models via uuids
 	\*************************************************************************/
+	public
 	func cachedModelsWith(uuids:any Collection<String>, notFound: inout Set<String>!) -> Set<QSModel>
 		{
 		var models:Set<QSModel> = Set<QSModel>()
@@ -1269,6 +1338,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model cache : return the number of cached models
 	\*************************************************************************/
+	public
 	func cachedModelCount() -> Int
 		{
 		self.models.count
@@ -1277,6 +1347,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model cache : return all the cached models
 	\*************************************************************************/
+	public
 	func cachedModelsAsArray() -> [QSModel]
 		{
 		var models:Array<QSModel> = Array<QSModel>()
@@ -1293,6 +1364,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model cache : return all the cached models
 	\*************************************************************************/
+	public
 	func cachedModelsAsSet() -> Set<QSModel>
 		{
 		var models:Set<QSModel> = Set<QSModel>()
@@ -1309,6 +1381,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model cache : flush the model cache
 	\*************************************************************************/
+	public
 	func flush()
 		{
 		for model in self.models
@@ -1330,6 +1403,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model cache : flush a set of models
 	\*************************************************************************/
+	public
 	func flush(models:any Collection<QSModel>)
 		{
 		for model in models
@@ -1341,6 +1415,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model cache : uncache the model
 	\*************************************************************************/
+	public
 	func uncache(model:QSModel)
 		{
 		self.modelsByUuid.removeObject(forKey: model.uuid)
@@ -1351,6 +1426,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model cache : uncache a set of models
 	\*************************************************************************/
+	public
 	func uncache(models:any Collection<QSModel>)
 		{
 		for model in models
@@ -1362,6 +1438,7 @@ class QSEntity : NSObject
 	/*************************************************************************\
 	|* Model cache : uncache all the models
 	\*************************************************************************/
+	public
 	func uncacheAllModels()
 		{
 		for model in self.models

@@ -147,7 +147,7 @@ class JobModel : QSModel
 			let op			= QSSqlOperation.init(with: entity.engine.io,
 												   sql: sql,
 												  args: args)
-			entity.engine.io.bgWriteQueue.addOperation(op)
+			entity.addOperation(op)
 			}
 		}
 	}

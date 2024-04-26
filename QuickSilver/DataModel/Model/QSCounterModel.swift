@@ -11,7 +11,7 @@
 
 import Foundation
 
-class QSCounterModel : QSModel
+public class QSCounterModel : QSModel
 	{
 	static let tableColumn = "tableName"			// name of 'table' column
 	static let counterColumn = "counter"			// name of 'counter' col

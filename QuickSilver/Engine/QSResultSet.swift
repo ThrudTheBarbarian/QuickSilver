@@ -23,7 +23,7 @@ import SQLite3
 /*****************************************************************************\
 |* Class definition
 \*****************************************************************************/
-class QSResultSet : NSObject
+public class QSResultSet : NSObject
 	{
 	/*************************************************************************\
 	|* Instance variables
@@ -75,7 +75,7 @@ class QSResultSet : NSObject
 	|* close this result-set. Note that this will be called on dealloc too
 	|* but that should not be depended upon
 	\*************************************************************************/
-	func close()
+	public func close()
 		{
 		if (self.preparedSql != nil)
 			{
@@ -92,7 +92,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* advance the cursor
 	\*************************************************************************/
-	func next() -> Bool
+	public func next() -> Bool
 		{
 		var rc:Int32 = SQLITE_OK		// result code
 		var retry:Bool = true			// whether to retry
@@ -161,7 +161,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return the query
 	\*************************************************************************/
-	func query() -> String
+	public func query() -> String
 		{
 		self.preparedSql.sql
 		}
@@ -169,7 +169,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return the column index for a given column's name
 	\*************************************************************************/
-	func columnIndex(forName name:String) -> Int32!
+	public func columnIndex(forName name:String) -> Int32!
 		{
 		if self.columnNameToIndexMap.isEmpty
 			{
@@ -198,7 +198,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return the column index map
 	\*************************************************************************/
-	func columnNameIndexMap() -> [String : Int]
+	public func columnNameIndexMap() -> [String : Int]
 		{
 		if self.columnNameToIndexMap.isEmpty
 			{
@@ -212,7 +212,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return an integer for a given column name
 	\*************************************************************************/
-	func intForColumn(named name:String) -> Int!
+	public func intForColumn(named name:String) -> Int!
 		{
 		if let idx = self.columnIndex(forName: name)
 			{
@@ -224,7 +224,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return an integer for a given column index
 	\*************************************************************************/
-	func intForColumn(withIndex idx:Int) -> Int!
+	public func intForColumn(withIndex idx:Int) -> Int!
 		{
 		if (idx < 0) || (idx > self.preparedSql.columnCount())
 			{
@@ -237,7 +237,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return an int64 for a given column name
 	\*************************************************************************/
-	func int64ForColumn(named name:String) -> Int64!
+	public func int64ForColumn(named name:String) -> Int64!
 		{
 		if let idx = self.columnIndex(forName: name)
 			{
@@ -249,7 +249,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return an int64 for a given column index
 	\*************************************************************************/
-	func int64ForColumn(withIndex idx:Int) -> Int64!
+	public func int64ForColumn(withIndex idx:Int) -> Int64!
 		{
 		if (idx < 0) || (idx > self.preparedSql.columnCount())
 			{
@@ -262,7 +262,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return a bool for a given column name
 	\*************************************************************************/
-	func boolForColumn(named name:String) -> Bool!
+	public func boolForColumn(named name:String) -> Bool!
 		{
 		if let idx = self.columnIndex(forName: name)
 			{
@@ -275,7 +275,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return a bool for a given column index
 	\*************************************************************************/
-	func boolForColumn(withIndex idx:Int) -> Bool!
+	public func boolForColumn(withIndex idx:Int) -> Bool!
 		{
 		if (idx < 0) || (idx > self.preparedSql.columnCount())
 			{
@@ -289,7 +289,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return a double for a given column name
 	\*************************************************************************/
-	func doubleForColumn(named name:String) -> Double!
+	public func doubleForColumn(named name:String) -> Double!
 		{
 		if let idx = self.columnIndex(forName: name)
 			{
@@ -301,7 +301,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return a double for a given column index
 	\*************************************************************************/
-	func doubleForColumn(withIndex idx:Int) -> Double!
+	public func doubleForColumn(withIndex idx:Int) -> Double!
 		{
 		if (idx < 0) || (idx > self.preparedSql.columnCount())
 			{
@@ -314,7 +314,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return a string for a given column name
 	\*************************************************************************/
-	func stringForColumn(named name:String) -> String!
+	public func stringForColumn(named name:String) -> String!
 		{
 		if let idx = self.columnIndex(forName: name)
 			{
@@ -326,7 +326,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return a string for a given column index
 	\*************************************************************************/
-	func stringForColumn(withIndex idx:Int) -> String!
+	public func stringForColumn(withIndex idx:Int) -> String!
 		{
 		if (idx < 0) || (idx > self.preparedSql.columnCount())
 			{
@@ -339,7 +339,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return a number for a given column index
 	\*************************************************************************/
-	func numberForColumn(withIndex idx:Int) -> NSNumber!
+	public func numberForColumn(withIndex idx:Int) -> NSNumber!
 		{
 		let stmt = self.preparedSql.stmt
 		let indx = Int32(idx)
@@ -362,7 +362,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return a number for a given column name
 	\*************************************************************************/
-	func numberForColumn(named name:String) -> NSNumber!
+	public func numberForColumn(named name:String) -> NSNumber!
 		{
 		if let idx = self.columnIndex(forName: name)
 			{
@@ -374,7 +374,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return a date for a given column name
 	\*************************************************************************/
-	func dateForColumn(named name:String) -> Date!
+	public func dateForColumn(named name:String) -> Date!
 		{
 		if let idx = self.columnIndex(forName: name)
 			{
@@ -386,7 +386,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return a date for a given column index
 	\*************************************************************************/
-	func dateForColumn(withIndex idx:Int) -> Date!
+	public func dateForColumn(withIndex idx:Int) -> Date!
 		{
 		var date:Date! = nil
 		
@@ -416,7 +416,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return a data for a given column name
 	\*************************************************************************/
-	func dataForColumn(named name:String) -> Data!
+	public func dataForColumn(named name:String) -> Data!
 		{
 		if let idx = self.columnIndex(forName: name)
 			{
@@ -428,7 +428,7 @@ class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return a string for a given column index
 	\*************************************************************************/
-	func dataForColumn(withIndex idx:Int) -> Data!
+	public func dataForColumn(withIndex idx:Int) -> Data!
 		{
 		if (idx < 0) || (idx > self.preparedSql.columnCount())
 			{

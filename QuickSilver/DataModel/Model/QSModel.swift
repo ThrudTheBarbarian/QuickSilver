@@ -13,30 +13,29 @@
 import Foundation
 import OSLog
 
-class QSModel : NSObject
+open class QSModel : NSObject
 	{
 	/*************************************************************************\
 	|* Static constants for table columns etc.
 	\*************************************************************************/
-	static let uuidEquals = "uuid=?"			// must match uuid below
-	static let uuidColumn = "uuid"				// name of the UUID column
-	static let creationDateColumn = "created"	// name of the creation col
-	static let modifiedDateColumn = "modified"	// name of the modified col
+	public static let uuidEquals = "uuid=?"				// must match uuid below
+	public static let uuidColumn = "uuid"				// name of the UUID column
+	public static let creationDateColumn = "created"	// name of the creation col
+	public static let modifiedDateColumn = "modified"	// name of the modified col
 
 	/*************************************************************************\
 	|* Instance properties
 	\*************************************************************************/
-	var isDeleted: Bool							// Marked as being deleted
-	var isPersisted: Bool						// Have we been persisted before
-	var notifyOnChange: Bool					// Whether to notify on change
-	var usedRecently: Bool						// For caching purposes
+	public var isDeleted: Bool					// Marked as being deleted
+	public var isPersisted: Bool				// Have we been persisted before
+	public var notifyOnChange: Bool				// Whether to notify on change
+	public var usedRecently: Bool				// For caching purposes
 	
-	var uuid: String							// Value in uuid column in db
-	var created: Date							// When created, in GMT
-	var modified: Date							// When modified, in GMT
-	
-	weak var entity : QSEntity!					// entity that manages us
+	public var uuid: String						// Value in uuid column in db
+	public var created: Date					// When created, in GMT
+	public var modified: Date					// When modified, in GMT
 
+	public weak var entity : QSEntity!			// entity that manages us
 	
 	// MARK: Creation
 

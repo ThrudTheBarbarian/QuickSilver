@@ -14,7 +14,7 @@ import os.log
 
 extension Logger
 	{
-    private static var subsystem = Bundle.main.bundleIdentifier!
-    static let quicksilver	 	 = Logger(subsystem:subsystem,
+    private static var subsystem 	= Bundle.main.bundleIdentifier!
+    public static let quicksilver	= Logger(subsystem:subsystem,
 										   category:"quicksilver")
 	}

@@ -13,10 +13,10 @@
 import Foundation
 import OSLog
 
-class QSEngine : NSObject
+public class QSEngine : NSObject
 	{
 	var counterEntity: QSCounterEntity!			// Entity for counters table
-	var io: QSIO								// Access to the database file
+	public var io: QSIO							// Access to the database file
 	var dbPath: String							// Path to the DB
 	
 	var entitiesByClass: [String:QSEntity]		// lookup by class name
