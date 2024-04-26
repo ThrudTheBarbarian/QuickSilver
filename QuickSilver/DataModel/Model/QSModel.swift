@@ -368,7 +368,10 @@ class QSModel : NSObject
 		{
 		if let entity = engine.entity(forClassNamed:self.className())
 			{
-			entity.deleteModels(where:sql, args:args)
+			if !entity.deleteModels(where:sql, args:args)
+				{
+				Logger.quicksilver.error("Failed to delete models: \(sql)")
+				}
 			}
 		}
 	

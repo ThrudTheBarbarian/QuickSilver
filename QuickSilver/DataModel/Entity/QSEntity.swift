@@ -15,7 +15,7 @@
 |*
 \*****************************************************************************/
 
-@_implementationOnly
+//@_implementationOnly
 import Foundation
 import OSLog
 
