@@ -69,7 +69,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Creation: fetch the model for a given UUID via this model's entity
 	\*************************************************************************/
-	static func modelWith(uuid:String, inEngine engine:QSEngine) -> QSModel!
+	public static func modelWith(uuid:String, inEngine engine:QSEngine) -> QSModel!
 		{
 		if let entity = engine.entity(forClassNamed: self.className())
 			{
@@ -81,7 +81,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Creation: fetch the models for given uuids via this model's entity
 	\*************************************************************************/
-	static func modelsWith(uuids:[String], inEngine engine:QSEngine) -> Set<QSModel>!
+	public static func modelsWith(uuids:[String], inEngine engine:QSEngine) -> Set<QSModel>!
 		{
 		if let entity = engine.entity(forClassNamed: self.className())
 			{
@@ -93,7 +93,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Creation: return any single model matching a WHERE clause
 	\*************************************************************************/
-	static func anyModelWith(engine:QSEngine, where sql:String, args:[Any?]) -> QSModel!
+	public static func anyModelWith(engine:QSEngine, where sql:String, args:[Any?]) -> QSModel!
 		{
 		if let entity = engine.entity(forClassNamed: self.className())
 			{
@@ -105,7 +105,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Creation: return any single model matching a WHERE clause, varargs style
 	\*************************************************************************/
-	static func anyModelWith(engine:QSEngine, where sql:String, _ args:Any?...) -> QSModel
+	public static func anyModelWith(engine:QSEngine, where sql:String, _ args:Any?...) -> QSModel
 		{
 		return self.anyModelWith(engine:engine, where:sql, args:args)
 		}
@@ -115,7 +115,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Accessors: Handle the model uuid
 	\*************************************************************************/
-	func cache(uuid:String)
+	public func cache(uuid:String)
 		{
 		self.uuid = uuid
 		}
@@ -123,7 +123,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Accessors: Handle the creation date
 	\*************************************************************************/
-	func cache(creation:Date)
+	public func cache(creation:Date)
 		{
 		self.created = creation
 		}
@@ -131,7 +131,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Accessors: Handle the modified date
 	\*************************************************************************/
-	func cache(modified:Date)
+	public func cache(modified:Date)
 		{
 		self.modified = modified
 		}
@@ -141,7 +141,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* i/o: flush the model from the cache, if we can
 	\*************************************************************************/
-	func flush() -> Bool
+	public func flush() -> Bool
 		{
 		var didUncache: Bool = false
 		if self.isPersisted
@@ -155,7 +155,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* i/o: persist ourselves
 	\*************************************************************************/
-	func persist()
+	public func persist()
 		{
 		if !self.isPersisted
 			{
@@ -167,13 +167,13 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* i/o: exists to allow subclasses to strut their funky stuff
 	\*************************************************************************/
-	func wasPersisted()
+	open func wasPersisted()
 		{}
 
 	/*************************************************************************\
 	|* i/o: exists to allow subclasses to override, must still call the static
 	\*************************************************************************/
-	func write(value:AnyObject, toColumn column:String)
+	public func write(value:AnyObject, toColumn column:String)
 		{
 		QSModel.write(value:value, toColumn:column, forModel:self)
 		}
@@ -181,7 +181,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* i/o: Persist a value to a column for a model
 	\*************************************************************************/
-	static func write(value:AnyObject,
+	public static func write(value:AnyObject,
 			toColumn column:String,
 			 forModel model:QSModel,
 			  withDate date:Date! = Date())
@@ -208,7 +208,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Access: return a string value for the column name
 	\*************************************************************************/
-	func stringValue(forColumn name:String) -> String!
+	public func stringValue(forColumn name:String) -> String!
 		{
 		if (self.isPersisted) && (!self.isDeleted)
 			{
@@ -223,7 +223,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Access: return a NSNumber value for the column name
 	\*************************************************************************/
-	func numberValue(forColumn name:String) -> NSNumber!
+	public func numberValue(forColumn name:String) -> NSNumber!
 		{
 		if (self.isPersisted) && (!self.isDeleted)
 			{
@@ -238,7 +238,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Access: return a Date value for the column name
 	\*************************************************************************/
-	func dateValue(forColumn name:String) -> Date!
+	public func dateValue(forColumn name:String) -> Date!
 		{
 		if (self.isPersisted) && (!self.isDeleted)
 			{
@@ -253,7 +253,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Access: return a Data value for the column name
 	\*************************************************************************/
-	func dataValue(forColumn name:String) -> Data!
+	public func dataValue(forColumn name:String) -> Data!
 		{
 		if (self.isPersisted) && (!self.isDeleted)
 			{
@@ -268,7 +268,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Access: return a Bool value for the column name
 	\*************************************************************************/
-	func boolValue(forColumn name:String) -> Bool!
+	public func boolValue(forColumn name:String) -> Bool!
 		{
 		if (self.isPersisted) && (!self.isDeleted)
 			{
@@ -283,7 +283,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Access: return an Int64 value for the column name
 	\*************************************************************************/
-	func int64Value(forColumn name:String) -> Int64!
+	public func int64Value(forColumn name:String) -> Int64!
 		{
 		if (self.isPersisted) && (!self.isDeleted)
 			{
@@ -300,7 +300,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Deletion : Return the first engine obtained from a list of models
 	\*************************************************************************/
-	static func engineFor(models:any Collection) -> QSEngine!
+	public static func engineFor(models:any Collection) -> QSEngine!
 		{
 		for model in models
 			{
@@ -318,13 +318,13 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Deletion : So subclasses can override
 	\*************************************************************************/
-	func willBeDeleted()
+	open func willBeDeleted()
 		{}
 	
 	/*************************************************************************\
 	|* Deletion : delete a model
 	\*************************************************************************/
-	func deleteModel()
+	public func deleteModel()
 		{
 		if self.isPersisted
 			{
@@ -337,7 +337,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Deletion : delete a set/array of models
 	\*************************************************************************/
-	static func delete(models:any Collection)
+	public static func delete(models:any Collection)
 		{
 		for model in models
 			{
@@ -363,7 +363,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Deletion : delete with a WHERE clause
 	\*************************************************************************/
-	static func deleteFrom(engine:QSEngine!, where sql:String, args:[Any?])
+	public static func deleteFrom(engine:QSEngine!, where sql:String, args:[Any?])
 		{
 		if let entity = engine.entity(forClassNamed:self.className())
 			{
@@ -377,7 +377,7 @@ open class QSModel : NSObject
 	/*************************************************************************\
 	|* Deletion : delete with a WHERE clause, varargs style
 	\*************************************************************************/
-	static func deleteFrom(engine:QSEngine, where sql:String, _ args:Any?...)
+	public static func deleteFrom(engine:QSEngine, where sql:String, _ args:Any?...)
 		{
 		self.deleteFrom(engine:engine, where:sql, args:args)
 		}

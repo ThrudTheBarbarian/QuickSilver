@@ -69,7 +69,7 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Creation: for subclasses to override
 	\*************************************************************************/
-	func open() -> Bool
+	public func open() -> Bool
 		{
 		self.didOpenEngine(self)
 		return true
@@ -78,7 +78,7 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Creation: for subclasses to override
 	\*************************************************************************/
-	func didOpenEngine(_ engine:QSEngine)
+	open func didOpenEngine(_ engine:QSEngine)
 		{
 		}
 		
@@ -87,7 +87,7 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Syncing: save the current state
 	\*************************************************************************/
-	func save()
+	public func save()
 		{
 		self.willSaveEngine()
 		if !self.commitAndBeginNewTransaction()
@@ -99,7 +99,7 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Syncing: Give the entities a chance to clean up before a save happens
 	\*************************************************************************/
-	func willSaveEngine()
+	open func willSaveEngine()
 		{
 		for entity in self.entitiesByTable.values
 			{
@@ -110,7 +110,7 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Syncing: flush the entities
 	\*************************************************************************/
-	func flush()
+	public func flush()
 		{
 		for entity in self.entitiesByTable.values
 			{
@@ -121,7 +121,7 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Syncing: shut down
 	\*************************************************************************/
-	func close()
+	public func close()
 		{
 		io.bgWriteQueue.waitUntilAllOperationsAreFinished()
 		
@@ -172,7 +172,7 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Transactions: begin a transaction
 	\*************************************************************************/
-	func beginTransaction() -> Bool
+	public func beginTransaction() -> Bool
 		{
 		if !self.io.beginTransaction()
 			{
@@ -185,7 +185,7 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Transactions: begin a transaction
 	\*************************************************************************/
-	func commit()
+	public func commit()
 		{
 		self.io.backgroundCommit()
 		}
@@ -193,7 +193,7 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Transactions: commit the last transaction and start anew
 	\*************************************************************************/
-	func commitAndBeginNewTransaction() -> Bool
+	public func commitAndBeginNewTransaction() -> Bool
 		{
 		if !self.io.commit(beginNewTransaction: true)
 			{
@@ -206,7 +206,7 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Transactions: (ok, not quite) wait for outstanding writes
 	\*************************************************************************/
-	func waitForOutstandingWrites()
+	public func waitForOutstandingWrites()
 		{
 		for entity in self.entitiesByTable.values
 			{
@@ -220,7 +220,7 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Entity management : return the entity for a given class
 	\*************************************************************************/
-	func entity(forClassNamed name:String) -> QSEntity!
+	public func entity(forClassNamed name:String) -> QSEntity!
 		{
 		let entity:QSEntity! = self.entitiesByClass[name]
 		if (!entity.isActive)
@@ -233,7 +233,7 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Entity management : return the entity for a given table
 	\*************************************************************************/
-	func entity(forTableNamed table:String) -> QSEntity!
+	public func entity(forTableNamed table:String) -> QSEntity!
 		{
 		self.entitiesByTable[table]
 		}
@@ -241,7 +241,7 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Entity management : register an entity for a given class
 	\*************************************************************************/
-	func addEntity(_ entity:QSEntity!, forClass klass:QSEntity)
+	public func addEntity(_ entity:QSEntity!, forClass klass:QSEntity)
 		{
 		if let validEntity = entity
 			{
@@ -253,7 +253,7 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Entity management : register an entity for a given table
 	\*************************************************************************/
-	func addEntity(_ entity:QSEntity!, forTable table:String)
+	public func addEntity(_ entity:QSEntity!, forTable table:String)
 		{
 		if let validEntity = entity
 			{
