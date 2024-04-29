@@ -241,12 +241,12 @@ public class QSEngine : NSObject
 	/*************************************************************************\
 	|* Entity management : register an entity for a given class
 	\*************************************************************************/
-	public func addEntity(_ entity:QSEntity!, forClass klass:QSEntity)
+	public func addEntity(_ entity:QSEntity!)
 		{
 		if let validEntity = entity
 			{
-			self.entitiesByClass[klass.className] = validEntity
-			self.entitiesByTable[klass.tableName] = validEntity
+			self.entitiesByClass[entity.className] = validEntity
+			self.entitiesByTable[entity.tableName] = validEntity
 			}
 		}
 	

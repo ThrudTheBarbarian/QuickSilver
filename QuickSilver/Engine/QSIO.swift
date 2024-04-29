@@ -22,7 +22,7 @@ public class QSIO : NSObject
 	|* normal	: call sync() to force a flush to disk
 	|* full		: call fullfsync() to wait until drive has committed data. Slow
 	\*************************************************************************/
-	enum Synchronicity
+	public enum Synchronicity
 		{
 		case off, normal, full, extra
 		}
@@ -135,7 +135,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Utility: return the SQLite library version
 	\*************************************************************************/
-	func sqlLibraryVersion() -> String
+	public func sqlLibraryVersion() -> String
 		{
 		return String(format:"%s", sqlite3_libversion())
 		}
@@ -144,7 +144,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Locking: lock the database for this thread's access
 	\*************************************************************************/
-	func lockDatabase()
+	public func lockDatabase()
 		{
 		self.dbLock.lock()
 		self.currentThread = Thread.current
@@ -154,7 +154,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Locking: unlock the database for this thread's access
 	\*************************************************************************/
-	func unlockDatabase()
+	public func unlockDatabase()
 		{
 		self.dbLock.unlock()
 		self.currentThread = nil
@@ -164,7 +164,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Locking: are we locked for this thread's access
 	\*************************************************************************/
-	func isLockedForThread(_ thread:Thread) -> Bool
+	public func isLockedForThread(_ thread:Thread) -> Bool
 		{
 		return self.isLocked || (self.currentThread == thread)
 		}
@@ -174,7 +174,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Errors: Increment the error count
 	\*************************************************************************/
-	func incrementSqlErrorCount()
+	public func incrementSqlErrorCount()
 		{
 		self.errorCount += 1
 		}
@@ -182,7 +182,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Errors: Get the last error message
 	\*************************************************************************/
-	func lastErrorMessage() -> String
+	public func lastErrorMessage() -> String
 		{
 		String(cString: sqlite3_errmsg(self.db))
 		}
@@ -190,7 +190,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Errors: Get the last error code
 	\*************************************************************************/
-	func lastErrorCode() -> Int
+	public func lastErrorCode() -> Int
 		{
 		Int(sqlite3_errcode(self.db))
 		}
@@ -198,7 +198,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Errors: Did the last operation proceed without error
 	\*************************************************************************/
-	func hadError() -> Bool
+	public func hadError() -> Bool
 		{
 		return self.lastErrorCode() != SQLITE_OK
 		}
@@ -208,7 +208,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Create a SQL statement to do a commit with
 	\*************************************************************************/
-	func commitSql() -> QSPreparedSql
+	public func commitSql() -> QSPreparedSql
 		{
 		if self.commitStmt == nil
 			{
@@ -222,7 +222,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Create a SQL statement to do a begin-transaction with
 	\*************************************************************************/
-	func beginTransactionSql(deferred:Bool = false) -> QSPreparedSql
+	public func beginTransactionSql(deferred:Bool = false) -> QSPreparedSql
 		{
 		if self.beginStmt == nil
 			{
@@ -242,7 +242,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Commit and optionally begin a new transaction
 	\*************************************************************************/
-	func commit(beginNewTransaction reopen:Bool = true) -> Bool
+	public func commit(beginNewTransaction reopen:Bool = true) -> Bool
 		{
 		var success = true
 		
@@ -297,7 +297,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Begin a transaction
 	\*************************************************************************/
-	func beginTransaction(deferred:Bool = false) -> Bool
+	public func beginTransaction(deferred:Bool = false) -> Bool
 		{
 		var ok = false
 		
@@ -329,7 +329,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Rollback a transaction
 	\*************************************************************************/
-	func rollback() -> Bool
+	public func rollback() -> Bool
 		{
 		let result = self.update("ROLLBACK TRANSACTION")
 		if (result)
@@ -343,7 +343,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Add a commit to the background queue
 	\*************************************************************************/
-	func backgroundCommit(beginNewTransaction renew:Bool = false)
+	public func backgroundCommit(beginNewTransaction renew:Bool = false)
 		{
 		if !self.readOnly
 			{
@@ -356,7 +356,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Vacuum the database
 	\*************************************************************************/
-	func vacuum()
+	public func vacuum()
 		{
 		if !self.readOnly
 			{
@@ -407,7 +407,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Analyse the database
 	\*************************************************************************/
-	func analyse()
+	public func analyse()
 		{
 		if !self.readOnly
 			{
@@ -445,7 +445,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Set how we manage synchronicity
 	\*************************************************************************/
-	func setSynchronicity(_ state:Synchronicity)
+	public func setSynchronicity(_ state:Synchronicity)
 		{
 		if !self.readOnly
 			{
@@ -499,7 +499,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Fetch how we manage synchronicity
 	\*************************************************************************/
-	func synchronicity() -> Synchronicity!
+	public func synchronicity() -> Synchronicity!
 		{
 	
 		let sync = self.int64For("PRAGMA SYNCHRONOUS")
@@ -521,7 +521,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Set the locking mode
 	\*************************************************************************/
-	func setLockingMode(exclusive:Bool)
+	public func setLockingMode(exclusive:Bool)
 		{
 		self.lockDatabase()
 		defer
@@ -559,12 +559,12 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Create a simple single-column index on a table
 	\*************************************************************************/
-	func createIndex(onTable table:String, column colName:String, named:String! = nil) -> Bool
+	public func createIndex(onTable table:String, column colName:String, named:String! = nil) -> Bool
 		{
 		return self.createIndex(onTable:table, columns:[colName], named:named)
 		}
 
-	func createIndex(onTable table:String,
+	public func createIndex(onTable table:String,
 					  columns cols:[String],
 						named name:String! = nil) -> Bool
 		{
@@ -596,7 +596,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* i/o: Open the database, optionally as read-only
 	\*************************************************************************/
-	func open(asReadOnly readOnly:Bool = false) -> Bool
+	public func open(asReadOnly readOnly:Bool = false) -> Bool
 		{
 		var ok 			= false
 		self.readOnly 	= readOnly
@@ -650,7 +650,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* i/o: return the last inserted auto-updated row-id
 	\*************************************************************************/
-	func lastInsertRowId() -> Int64
+	public func lastInsertRowId() -> Int64
 		{
 		self.lockDatabase()
 		defer
@@ -664,7 +664,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* i/o: test the database accessibility
 	\*************************************************************************/
-	func isActive() -> Bool
+	public func isActive() -> Bool
 		{
 		var active = false
 		
@@ -692,7 +692,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* i/o: Close the database
 	\*************************************************************************/
-	func close() -> Bool
+	public func close() -> Bool
 		{
 		if self.db == nil
 			{
@@ -774,7 +774,7 @@ public class QSIO : NSObject
 	/*****************************************************************************\
 	|* statement: We can't close cleanly while prepared statements remain prepared...
 	\*****************************************************************************/
-	func finalisePreparedStatements()
+	public func finalisePreparedStatements()
 		{
 		self.lockDatabase()
 		defer
@@ -793,7 +793,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* statement: register the prepared statement into the cache
 	\*************************************************************************/
-	func registerPreparedStatement(_ ps: QSPreparedSql!)
+	public func registerPreparedStatement(_ ps: QSPreparedSql!)
 		{
 		if let ps = ps
 			{
@@ -804,7 +804,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* statement: unregister the prepared statement into the cache
 	\*************************************************************************/
-	func unregisterPreparedStatement(_ ps: QSPreparedSql!)
+	public func unregisterPreparedStatement(_ ps: QSPreparedSql!)
 		{
 		if let ps = ps
 			{
@@ -815,7 +815,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* statement: bind an object to a statement
 	\*************************************************************************/
-	func bind(item obj:AnyObject,
+	public func bind(item obj:AnyObject,
 			  toColumn idx:Int32,
 			  inStatement stmt:OpaquePointer?)
 		{
@@ -915,7 +915,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* column io: Return a string for a query of only one column
 	\*************************************************************************/
-	func stringFor(_ sql:Any, _ args:AnyObject...) -> String!
+	public func stringFor(_ sql:Any, _ args:AnyObject...) -> String!
 		{
 		var psql:QSPreparedSql! = nil
 		
@@ -950,7 +950,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* column io: Return a number for a query of only one column
 	\*************************************************************************/
-	func numberFor(_ sql:Any, _ args:AnyObject...) -> NSNumber!
+	public func numberFor(_ sql:Any, _ args:AnyObject...) -> NSNumber!
 		{
 		var psql:QSPreparedSql! = nil
 		
@@ -985,7 +985,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* column io: Return a date for a query of only one column
 	\*************************************************************************/
-	func dateFor(_ sql:Any, _ args:AnyObject...) -> Date!
+	public func dateFor(_ sql:Any, _ args:AnyObject...) -> Date!
 		{
 		var psql:QSPreparedSql! = nil
 		
@@ -1020,7 +1020,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* column io: Return a data for a query of only one column
 	\*************************************************************************/
-	func dataFor(_ sql:Any, _ args:AnyObject...) -> Data!
+	public func dataFor(_ sql:Any, _ args:AnyObject...) -> Data!
 		{
 		var psql:QSPreparedSql! = nil
 		
@@ -1055,7 +1055,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* column io: Return a bool for a query of only one column
 	\*************************************************************************/
-	func boolFor(_ sql:Any, _ args:AnyObject...) -> Bool!
+	public func boolFor(_ sql:Any, _ args:AnyObject...) -> Bool!
 		{
 		var psql:QSPreparedSql! = nil
 		
@@ -1090,7 +1090,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* column io: Return an int64 for a query of only one column
 	\*************************************************************************/
-	func int64For(_ sql:Any, _ args:AnyObject...) -> Int64!
+	public func int64For(_ sql:Any, _ args:AnyObject...) -> Int64!
 		{
 		var psql:QSPreparedSql! = nil
 		
@@ -1125,7 +1125,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* column io: Return an int64 for a query of only one column
 	\*************************************************************************/
-	func int64For(_ sql:Any) -> Int64!
+	public func int64For(_ sql:Any) -> Int64!
 		{
 		return self.int64For(sql, NSNull.init())
 		}
@@ -1136,7 +1136,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* execution: Execute a query on the db
 	\*************************************************************************/
-	func query(_ sql:Any, withArgs args:[Any?]) -> QSResultSet!
+	public func query(_ sql:Any, withArgs args:[Any?]) -> QSResultSet!
 		{
 		var psql:QSPreparedSql! = nil
 		
@@ -1164,7 +1164,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* execution: Execute a query on the db, varargs version
 	\*************************************************************************/
-	func query(_ sql:Any, _ args:Any?...) -> QSResultSet!
+	public func query(_ sql:Any, _ args:Any?...) -> QSResultSet!
 		{
 		return self.query(sql, withArgs:args)
 		}
@@ -1172,7 +1172,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* execution: Execute an update on the db
 	\*************************************************************************/
-	func update(_ sql:Any, withArgs args:[Any?]) -> Bool
+	public func update(_ sql:Any, withArgs args:[Any?]) -> Bool
 		{
 		var psql:QSPreparedSql! = nil
 		
@@ -1200,7 +1200,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* execution: Execute a query on the db, varargs version
 	\*************************************************************************/
-	func update(_ sql:Any, _ args:Any?...) -> Bool
+	public func update(_ sql:Any, _ args:Any?...) -> Bool
 		{
 		return self.update(sql, withArgs:args)
 		}
