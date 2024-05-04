@@ -693,7 +693,6 @@ open class QSEntity : NSObject
 		let psql = self.sqlForSelect(of: "COUNT(*)", where: sql)
 		let converted = QSPreparedSql.filter(all:args)
 		
-		
 		/*********************************************************************\
 		|* Make sure we're self-serialised
 		\*********************************************************************/
@@ -1097,12 +1096,14 @@ open class QSEntity : NSObject
 				{
 				if let model = self.cachedModelWith(uuid: uuid)
 					{
+					model.isPersisted = true
 					models.insert(model)
 					}
 				else
 					{
 					if let model = self.loadModelFrom(resultSet: results)
 						{
+						model.isPersisted = true
 						self.cacheModel(model)
 						models.insert(model)
 						}
