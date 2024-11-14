@@ -15,7 +15,7 @@ import OSLog
 /*****************************************************************************\
 |* Class definition
 \*****************************************************************************/
-class QSCommitOperation : Operation
+class QSCommitOperation : Operation, @unchecked Sendable
 	{
 	let io : QSIO!				// io object
 	let reopen : Bool			// Begin a new transaction after closing this

@@ -14,7 +14,7 @@ import OSLog
 /*****************************************************************************\
 |* Class definition
 \*****************************************************************************/
-public class QSSqlOperation : Operation
+public class QSSqlOperation : Operation, @unchecked Sendable
 	{
 	let io : QSIO!				// io object
 	let sql : Any!				// Either a string or preparedSQL

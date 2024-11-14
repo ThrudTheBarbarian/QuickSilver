@@ -16,7 +16,7 @@ import SQLite3
 /*****************************************************************************\
 |* Class definition
 \*****************************************************************************/
-public class QSPreparedSql : NSObject
+@objc public class QSPreparedSql : NSObject
 	{
 	/*************************************************************************\
 	|* Instance variables
@@ -40,7 +40,7 @@ public class QSPreparedSql : NSObject
 	/*************************************************************************\
 	|* Creation
 	\*************************************************************************/
-	public init(withIo io: QSIO, sql:String, prepare:Bool)
+	@objc public init(withIo io: QSIO, sql:String, prepare:Bool)
 		{
 		/*********************************************************************\
 		|* Set up the instance variables
@@ -178,7 +178,7 @@ public class QSPreparedSql : NSObject
 	/*************************************************************************\
 	|* Implement the description method
 	\*************************************************************************/
-	public override var description:String
+	@objc public override var description:String
 		{
 		return String(format:"%@ (%@): %@",
 				self.className,
@@ -192,7 +192,7 @@ public class QSPreparedSql : NSObject
 	/*************************************************************************\
 	|* Calculate the number of arguments
 	\*************************************************************************/
-	func numberOfArguments() -> Int
+	@objc func numberOfArguments() -> Int
 		{
 		return (self.multiBindSql)
 			? self.fixedBindPoints + self.multiBindIndexes.count
@@ -202,7 +202,7 @@ public class QSPreparedSql : NSObject
 	/*************************************************************************\
 	|* Calculate the number of columns
 	\*************************************************************************/
-	func columnCount() -> Int
+	@objc func columnCount() -> Int
 		{
 		Int(sqlite3_column_count(self.stmt))
 		}
@@ -210,7 +210,7 @@ public class QSPreparedSql : NSObject
 	/*************************************************************************\
 	|* Return the name of a column
 	\*************************************************************************/
-	func columnName(forIndex idx:Int) -> String!
+	@objc func columnName(forIndex idx:Int) -> String!
 		{
 		var result:String! = nil
 		
@@ -224,7 +224,7 @@ public class QSPreparedSql : NSObject
 	/*************************************************************************\
 	|* Step to the next row
 	\*************************************************************************/
-	func step() -> Int32
+	@objc func step() -> Int32
 		{
 		sqlite3_step(self.stmt)
 		}
@@ -232,7 +232,7 @@ public class QSPreparedSql : NSObject
 	/*************************************************************************\
 	|* Latest error from the statement
 	\*************************************************************************/
-	func lastError() -> String
+	@objc func lastError() -> String
 		{
 		String(cString: sqlite3_errmsg(self.stmt))
 		}
@@ -395,7 +395,7 @@ public class QSPreparedSql : NSObject
 	/*************************************************************************\
 	|* Prepare the statement
 	\*************************************************************************/
-	func prepare() -> Bool
+	@objc public func prepare() -> Bool
 		{
 		var isPrepared:Bool = true
 		
@@ -431,7 +431,7 @@ public class QSPreparedSql : NSObject
 	/*************************************************************************\
 	|* Bind the arguments
 	\*************************************************************************/
-	func bind(arguments args:[AnyObject]) -> Int32
+	@objc public func bind(arguments args:[AnyObject]) -> Int32
 		{
 		var rc = SQLITE_OK
 		
@@ -527,7 +527,7 @@ public class QSPreparedSql : NSObject
 	/*************************************************************************\
 	|* Close the statement
 	\*************************************************************************/
-	func close()
+	@objc public func close()
 		{
 		if self.isPrepared
 			{
@@ -544,7 +544,7 @@ public class QSPreparedSql : NSObject
 	/*************************************************************************\
 	|* Prepare the statement
 	\*************************************************************************/
-	func prepareSql()
+	@objc public func prepareSql()
 		{
 		if !self.multiBindSql && !self.isPrepared
 			{
@@ -581,7 +581,7 @@ public class QSPreparedSql : NSObject
 	/*************************************************************************\
 	|* Update using a set of args
 	\*************************************************************************/
-	func update(with args:[AnyObject] = []) -> Bool
+	@objc public func update(with args:[AnyObject] = []) -> Bool
 		{
 		var selfLocked = false
 		
@@ -666,7 +666,7 @@ public class QSPreparedSql : NSObject
 	/*************************************************************************\
 	|* Query using a set of args
 	\*************************************************************************/
-	func query(with args:[AnyObject]) -> QSResultSet!
+	@objc public func query(with args:[AnyObject]) -> QSResultSet!
 		{
 		/*********************************************************************\
 		|* If code is stuck here, try printint out self.db.activeResults
@@ -721,7 +721,7 @@ public class QSPreparedSql : NSObject
 	/*************************************************************************\
 	|* Finalise
 	\*************************************************************************/
-	func finaliseSql()
+	@objc public func finaliseSql()
 		{
 		if self.stmt != nil
 			{

@@ -15,7 +15,7 @@ import Foundation
 /*****************************************************************************\
 |* Class definition
 \*****************************************************************************/
-class QSOperationQueue : OperationQueue
+class QSOperationQueue : OperationQueue, @unchecked Sendable
 	{
 	let addLock : NSLock!				// Lock while adding to the queue
 	let waitLock : NSLock!				// Only one wait is allowed at a time

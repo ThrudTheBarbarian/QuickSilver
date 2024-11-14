@@ -23,7 +23,7 @@ import SQLite3
 /*****************************************************************************\
 |* Class definition
 \*****************************************************************************/
-public class QSResultSet : NSObject
+@objc public class QSResultSet : NSObject
 	{
 	/*************************************************************************\
 	|* Instance variables
@@ -34,14 +34,14 @@ public class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Creation
 	\*************************************************************************/
-	public override init()
+	@objc public override init()
 		{
 		self.preparedSql = nil
 		self.columnNameToIndexMap = [String:Int]()
 		super.init()
 		}
 		
-	public static func withPreparedSql(sql: QSPreparedSql) -> QSResultSet
+	@objc public static func withPreparedSql(sql: QSPreparedSql) -> QSResultSet
 		{
 		let rs = QSResultSet.init()
 		rs.preparedSql = sql
@@ -63,7 +63,7 @@ public class QSResultSet : NSObject
 	/*************************************************************************\
 	|* For debugging
 	\*************************************************************************/
-	public override var description:String
+	@objc public override var description:String
 		{
 		let sql = self.preparedSql.sql.description
 		return String(format: "\(self.className): \(sql))")
@@ -75,7 +75,7 @@ public class QSResultSet : NSObject
 	|* close this result-set. Note that this will be called on dealloc too
 	|* but that should not be depended upon
 	\*************************************************************************/
-	public func close()
+	@objc public func close()
 		{
 		if (self.preparedSql != nil)
 			{
@@ -92,7 +92,7 @@ public class QSResultSet : NSObject
 	/*************************************************************************\
 	|* advance the cursor
 	\*************************************************************************/
-	public func next() -> Bool
+	@objc public func next() -> Bool
 		{
 		var rc:Int32 = SQLITE_OK		// result code
 		var retry:Bool = true			// whether to retry
@@ -161,7 +161,7 @@ public class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return the query
 	\*************************************************************************/
-	public func query() -> String
+	@objc public func query() -> String
 		{
 		self.preparedSql.sql
 		}
@@ -198,7 +198,7 @@ public class QSResultSet : NSObject
 	/*************************************************************************\
 	|* Return the column index map
 	\*************************************************************************/
-	public func columnNameIndexMap() -> [String : Int]
+	@objc public func columnNameIndexMap() -> [String : Int]
 		{
 		if self.columnNameToIndexMap.isEmpty
 			{

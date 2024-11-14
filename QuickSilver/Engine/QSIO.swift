@@ -14,7 +14,7 @@ import Foundation
 import OSLog
 import SQLite3
 
-public class QSIO : NSObject
+@objc public class QSIO : NSObject
 	{
 	/*************************************************************************\
 	|* How much to enforce the D in ACID
@@ -35,7 +35,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Implement the description method
 	\*************************************************************************/
-	public override var description:String
+	@objc public override var description:String
 		{
 		return String(format:"%@ (RO:%@): errors:%d, %@in transaction, uncommitted:%d",
 				self.className,
@@ -81,7 +81,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Creation
 	\*************************************************************************/
-	public init(withPath path: String)
+	@objc public init(withPath path: String)
 		{
 		/*********************************************************************\
 		|* Instantiate any instance vars
@@ -135,7 +135,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Utility: return the SQLite library version
 	\*************************************************************************/
-	public func sqlLibraryVersion() -> String
+	@objc public func sqlLibraryVersion() -> String
 		{
 		return String(format:"%s", sqlite3_libversion())
 		}
@@ -144,7 +144,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Locking: lock the database for this thread's access
 	\*************************************************************************/
-	public func lockDatabase()
+	@objc public func lockDatabase()
 		{
 		self.dbLock.lock()
 		self.currentThread = Thread.current
@@ -154,7 +154,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Locking: unlock the database for this thread's access
 	\*************************************************************************/
-	public func unlockDatabase()
+	@objc public func unlockDatabase()
 		{
 		self.dbLock.unlock()
 		self.currentThread = nil
@@ -164,7 +164,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Locking: are we locked for this thread's access
 	\*************************************************************************/
-	public func isLockedForThread(_ thread:Thread) -> Bool
+	@objc public func isLockedForThread(_ thread:Thread) -> Bool
 		{
 		return self.isLocked || (self.currentThread == thread)
 		}
@@ -174,7 +174,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Errors: Increment the error count
 	\*************************************************************************/
-	public func incrementSqlErrorCount()
+	@objc public func incrementSqlErrorCount()
 		{
 		self.errorCount += 1
 		}
@@ -182,7 +182,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Errors: Get the last error message
 	\*************************************************************************/
-	public func lastErrorMessage() -> String
+	@objc public func lastErrorMessage() -> String
 		{
 		String(cString: sqlite3_errmsg(self.db))
 		}
@@ -190,7 +190,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Errors: Get the last error code
 	\*************************************************************************/
-	public func lastErrorCode() -> Int
+	@objc public func lastErrorCode() -> Int
 		{
 		Int(sqlite3_errcode(self.db))
 		}
@@ -198,7 +198,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Errors: Did the last operation proceed without error
 	\*************************************************************************/
-	public func hadError() -> Bool
+	@objc public func hadError() -> Bool
 		{
 		return self.lastErrorCode() != SQLITE_OK
 		}
@@ -208,7 +208,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Create a SQL statement to do a commit with
 	\*************************************************************************/
-	public func commitSql() -> QSPreparedSql
+	@objc public func commitSql() -> QSPreparedSql
 		{
 		if self.commitStmt == nil
 			{
@@ -222,7 +222,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Create a SQL statement to do a begin-transaction with
 	\*************************************************************************/
-	public func beginTransactionSql(deferred:Bool = false) -> QSPreparedSql
+	@objc public func beginTransactionSql(deferred:Bool = false) -> QSPreparedSql
 		{
 		if self.beginStmt == nil
 			{
@@ -242,7 +242,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Commit and optionally begin a new transaction
 	\*************************************************************************/
-	public func commit(beginNewTransaction reopen:Bool = true) -> Bool
+	@objc public func commit(beginNewTransaction reopen:Bool = true) -> Bool
 		{
 		var success = true
 		
@@ -297,7 +297,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Begin a transaction
 	\*************************************************************************/
-	public func beginTransaction(deferred:Bool = false) -> Bool
+	@objc public func beginTransaction(deferred:Bool = false) -> Bool
 		{
 		var ok = false
 		
@@ -329,7 +329,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Rollback a transaction
 	\*************************************************************************/
-	public func rollback() -> Bool
+	@objc public func rollback() -> Bool
 		{
 		let result = self.update("ROLLBACK TRANSACTION")
 		if (result)
@@ -343,7 +343,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Add a commit to the background queue
 	\*************************************************************************/
-	public func backgroundCommit(beginNewTransaction renew:Bool = false)
+	@objc public func backgroundCommit(beginNewTransaction renew:Bool = false)
 		{
 		if !self.readOnly
 			{
@@ -356,7 +356,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Vacuum the database
 	\*************************************************************************/
-	public func vacuum()
+	@objc public func vacuum()
 		{
 		if !self.readOnly
 			{
@@ -407,7 +407,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Analyse the database
 	\*************************************************************************/
-	public func analyse()
+	@objc public func analyse()
 		{
 		if !self.readOnly
 			{
@@ -559,12 +559,12 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* Management: Create a simple single-column index on a table
 	\*************************************************************************/
-	public func createIndex(onTable table:String, column colName:String, named:String! = nil) -> Bool
+	@objc public func createIndex(onTable table:String, column colName:String, named:String! = nil) -> Bool
 		{
 		return self.createIndex(onTable:table, columns:[colName], named:named)
 		}
 
-	public func createIndex(onTable table:String,
+	@objc public func createIndex(onTable table:String,
 					  columns cols:[String],
 						named name:String! = nil) -> Bool
 		{
@@ -596,7 +596,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* i/o: Open the database, optionally as read-only
 	\*************************************************************************/
-	public func open(asReadOnly readOnly:Bool = false) -> Bool
+	@objc public func open(asReadOnly readOnly:Bool = false) -> Bool
 		{
 		var ok 			= false
 		self.readOnly 	= readOnly
@@ -650,7 +650,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* i/o: return the last inserted auto-updated row-id
 	\*************************************************************************/
-	public func lastInsertRowId() -> Int64
+	@objc public func lastInsertRowId() -> Int64
 		{
 		self.lockDatabase()
 		defer
@@ -664,7 +664,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* i/o: test the database accessibility
 	\*************************************************************************/
-	public func isActive() -> Bool
+	@objc public func isActive() -> Bool
 		{
 		var active = false
 		
@@ -692,7 +692,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* i/o: Close the database
 	\*************************************************************************/
-	public func close() -> Bool
+	@objc public func close() -> Bool
 		{
 		if self.db == nil
 			{
@@ -774,7 +774,7 @@ public class QSIO : NSObject
 	/*****************************************************************************\
 	|* statement: We can't close cleanly while prepared statements remain prepared...
 	\*****************************************************************************/
-	public func finalisePreparedStatements()
+	@objc public func finalisePreparedStatements()
 		{
 		self.lockDatabase()
 		defer
@@ -793,7 +793,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* statement: register the prepared statement into the cache
 	\*************************************************************************/
-	public func registerPreparedStatement(_ ps: QSPreparedSql!)
+	@objc public func registerPreparedStatement(_ ps: QSPreparedSql!)
 		{
 		if let ps = ps
 			{
@@ -804,7 +804,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* statement: unregister the prepared statement into the cache
 	\*************************************************************************/
-	public func unregisterPreparedStatement(_ ps: QSPreparedSql!)
+	@objc public func unregisterPreparedStatement(_ ps: QSPreparedSql!)
 		{
 		if let ps = ps
 			{
@@ -815,7 +815,7 @@ public class QSIO : NSObject
 	/*************************************************************************\
 	|* statement: bind an object to a statement
 	\*************************************************************************/
-	public func bind(item obj:AnyObject,
+	@objc public func bind(item obj:AnyObject,
 			  toColumn idx:Int32,
 			  inStatement stmt:OpaquePointer?)
 		{
